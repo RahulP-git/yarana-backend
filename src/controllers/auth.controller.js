@@ -160,11 +160,16 @@ const registerCustomer = async (req, res) => {
             phone,
             current_address,
             location,
+            dob,
+            gender,
             password,
             profile_photo_url,
             id_proof_url,
             accepted_terms
         } = req.body;
+
+        const [day, month, year] = dob.split("-").map(Number);
+        const dobDate = new Date(year, month - 1, day);
 
         const result = await registerUser({
             fullName: full_name,
@@ -172,6 +177,8 @@ const registerCustomer = async (req, res) => {
             phone,
             currentAddress: current_address,
             location,
+            dob: dobDate,
+            gender,
             password,
             profilePhoto: profile_photo_url || "",
             idProofUrl: id_proof_url || "",
@@ -212,19 +219,27 @@ const registerProvider = async (req, res) => {
 
         const {
             full_name,
-            business_name,
             email,
             phone,
             current_address,
+            location,
+            dob,
+            gender,
             password,
             accepted_terms
         } = req.body;
+
+        const [day, month, year] = dob.split("-").map(Number);
+        const dobDate = new Date(year, month - 1, day);
 
         const result = await registerUser({
             fullName: full_name,
             email,
             phone,
             currentAddress: current_address,
+            location,
+            dob: dobDate,
+            gender,
             password,
             acceptedTerms: accepted_terms,
             role: "provider"

@@ -46,6 +46,8 @@ const validateRegisterComplete = (data) => {
         email,
         phone,
         current_address,
+        dob,
+        gender,
         password,
         confirm_password,
         accepted_terms
@@ -66,6 +68,20 @@ const validateRegisterComplete = (data) => {
 
     if (!phone || phone.trim().length < 10) {
         errors.push("Valid phone number is required");
+    }
+
+    if (!dob || !/^\d{2}-\d{2}-\d{4}$/.test(dob)) {
+        errors.push("Date of birth must be in DD-MM-YYYY format");
+    } else {
+        const [day, month, year] = dob.split("-").map(Number);
+        const date = new Date(year, month - 1, day);
+        if (isNaN(date.getTime())) {
+            errors.push("Please provide a valid date of birth");
+        }
+    }
+
+    if (!gender || !["Male", "Female", "Other"].includes(gender)) {
+        errors.push("Gender must be Male, Female, or Other");
     }
 
     if (!current_address || current_address.trim().length < 5) {

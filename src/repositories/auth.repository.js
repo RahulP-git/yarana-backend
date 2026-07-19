@@ -9,6 +9,8 @@ const registerUser = async ({
     phone,
     currentAddress,
     location,
+    dob,
+    gender,
     password,
     profilePhoto,
     idProofUrl,
@@ -39,6 +41,8 @@ const registerUser = async ({
         password: hashedPassword,
         currentAddress,
         location: location || { lat: 0, lng: 0 },
+        dob,
+        gender,
         profilePhoto: profilePhoto || "",
         role,
         isVerified: false

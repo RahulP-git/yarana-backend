@@ -38,6 +38,18 @@ const userSchema = new mongoose.Schema(
             minlength: [8, "Password must be at least 8 characters"],
             select: false
         },
+        gender: {
+            type: String,
+            required: [true, "Gender is required"],
+            enum: {
+                values: ["Male", "Female", "Other"],
+                message: "Gender must be Male, Female, or Other"
+            }
+        },
+        dob: {
+            type: Date,
+            required: [true, "Date of birth is required"]
+        },
         profilePhoto: {
             type: String,
             default: ""
