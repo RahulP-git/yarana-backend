@@ -38,12 +38,21 @@ const registerInit = async (req, res) => {
         const { phone, role } = req.body;
         const result = await createOTP(phone, "registration");
 
+        const responseData = {
+            otp_session_id: result.otp_session_id,
+            expires_in: result.expires_in
+        };
+
+        if (result.otp) {
+            responseData.otp = result.otp;
+        }
+
         return sendResponse(
             res,
             SUCCESS,
             true,
             "OTP sent successfully",
-            { otp_session_id: result.otp_session_id, expires_in: result.expires_in }
+            responseData
         );
     } catch (error) {
         return sendResponse(
@@ -106,12 +115,20 @@ const resendOtp = async (req, res) => {
         const { otp_session_id } = req.body;
         const result = await resendOTP(otp_session_id, "registration");
 
+        const responseData = {
+            expires_in: result.expires_in
+        };
+
+        if (result.otp) {
+            responseData.otp = result.otp;
+        }
+
         return sendResponse(
             res,
             SUCCESS,
             true,
             "OTP resent",
-            { expires_in: result.expires_in }
+            responseData
         );
     } catch (error) {
         return sendResponse(
@@ -324,12 +341,21 @@ const forgotPassword = async (req, res) => {
 
         const result = await createOTP(phone, "forgot_password");
 
+        const responseData = {
+            otp_session_id: result.otp_session_id,
+            expires_in: result.expires_in
+        };
+
+        if (result.otp) {
+            responseData.otp = result.otp;
+        }
+
         return sendResponse(
             res,
             SUCCESS,
             true,
             "OTP sent successfully",
-            { otp_session_id: result.otp_session_id, expires_in: result.expires_in }
+            responseData
         );
     } catch (error) {
         return sendResponse(

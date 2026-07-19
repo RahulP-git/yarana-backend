@@ -30,7 +30,13 @@ const createOTP = async (phone, purpose) => {
 
     await sendOTPService(phone, otp);
 
-    return { otp_session_id: otpSessionId, expires_in: 300 };
+    const response = { otp_session_id: otpSessionId, expires_in: 300 };
+
+    if (process.env.DEV_OTP_FALLBACK === "true") {
+        response.otp = otp;
+    }
+
+    return response;
 };
 
 const verifyOTP = async (otpSessionId, otp, purpose) => {
@@ -81,7 +87,13 @@ const resendOTP = async (otpSessionId, purpose) => {
 
     await sendOTPService(otpRecord.phone, otp);
 
-    return { expires_in: 300 };
+    const response = { expires_in: 300 };
+
+    if (process.env.DEV_OTP_FALLBACK === "true") {
+        response.otp = otp;
+    }
+
+    return response;
 };
 
 module.exports = { createOTP, verifyOTP, resendOTP };
