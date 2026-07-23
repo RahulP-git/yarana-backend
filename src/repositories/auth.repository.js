@@ -15,6 +15,8 @@ const registerUser = async ({
     profilePhoto,
     idProofUrl,
     acceptedTerms,
+    serviceType,
+    experience,
     role = "customer"
 }) => {
     const existingEmail = await User.findOne({ email });
@@ -44,6 +46,9 @@ const registerUser = async ({
         dob,
         gender,
         profilePhoto: profilePhoto || "",
+        idProofUrl: idProofUrl || "",
+        serviceType: serviceType || [],
+        experience: experience || 0,
         role,
         isVerified: false
     });

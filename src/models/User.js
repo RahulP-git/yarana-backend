@@ -81,6 +81,18 @@ const userSchema = new mongoose.Schema(
         totalSpent: {
             type: Number,
             default: 0
+        },
+        idProofUrl: {
+            type: String,
+            default: ""
+        },
+        serviceType: {
+            type: [String],
+            default: []
+        },
+        experience: {
+            type: Number,
+            default: 0
         }
     },
     {
