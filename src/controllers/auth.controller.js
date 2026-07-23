@@ -4,11 +4,13 @@ const {
     refreshAccessToken
 } = require("../repositories/auth.repository");
 const { createOTP, verifyOTP, resendOTP } = require("../repositories/otp.repository");
+const { extractUrl } = require("../utils/upload");
 const {
     validateRegisterInit,
     validateOtpVerify,
     validateOtpResend,
     validateRegisterComplete,
+    validateRegisterProvider,
     validateLogin,
     validateRefreshToken,
     validateForgotPassword,
@@ -204,90 +206,6 @@ const registerCustomer = async (req, res) => {
     }
 };
 
-const validateRegisterProvider = (data) => {
-    const {
-        otp_verified_token,
-        full_name,
-        email,
-        phone,
-        current_address,
-        dob,
-        gender,
-        password,
-        confirm_password,
-        id_proof_url,
-        service_type,
-        experience,
-        accepted_terms
-    } = data;
-    const errors = [];
-
-    if (!otp_verified_token) {
-        errors.push("OTP verified token is required");
-    }
-
-    if (!full_name || full_name.trim().length < 3 || full_name.trim().length > 50) {
-        errors.push("Full name must be between 3 and 50 characters");
-    }
-
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-        errors.push("Please provide a valid email");
-    }
-
-    if (!phone || phone.trim().length < 10) {
-        errors.push("Valid phone number is required");
-    }
-
-    if (!dob || !/^\d{2}-\d{2}-\d{4}$/.test(dob)) {
-        errors.push("Date of birth must be in DD-MM-YYYY format");
-    } else {
-        const [day, month, year] = dob.split("-").map(Number);
-        const date = new Date(year, month - 1, day);
-        if (isNaN(date.getTime())) {
-            errors.push("Please provide a valid date of birth");
-        }
-    }
-
-    if (!gender || !["Male", "Female", "Other"].includes(gender)) {
-        errors.push("Gender must be Male, Female, or Other");
-    }
-
-    if (!current_address || current_address.trim().length < 5) {
-        errors.push("Current address is required");
-    }
-
-    if (!password || password.length < 8) {
-        errors.push("Password must be at least 8 characters");
-    } else {
-        if (!/[a-z]/.test(password)) errors.push("Password must contain at least one lowercase letter");
-        if (!/[A-Z]/.test(password)) errors.push("Password must contain at least one uppercase letter");
-        if (!/\d/.test(password)) errors.push("Password must contain at least one number");
-        if (!/[@$!%*?&]/.test(password)) errors.push("Password must contain at least one special character (@$!%*?&)");
-    }
-
-    if (password !== confirm_password) {
-        errors.push("Passwords do not match");
-    }
-
-    if (!id_proof_url || id_proof_url.trim().length === 0) {
-        errors.push("ID proof is required");
-    }
-
-    if (!service_type || !Array.isArray(service_type) || service_type.length === 0) {
-        errors.push("At least one service type is required");
-    }
-
-    if (!experience || experience < 0) {
-        errors.push("Experience is required");
-    }
-
-    if (!accepted_terms) {
-        errors.push("You must accept the terms and conditions");
-    }
-
-    return errors;
-};
-
 const registerProvider = async (req, res) => {
     try {
         const errors = validateRegisterProvider(req.body);
@@ -301,7 +219,7 @@ const registerProvider = async (req, res) => {
             );
         }
 
-        const [
+        const {
             full_name,
             email,
             phone,
@@ -310,11 +228,28 @@ const registerProvider = async (req, res) => {
             dob,
             gender,
             password,
+            confirm_password,
             id_proof_url,
             service_type,
             experience,
             accepted_terms
-        ] = req.body;
+        } = req.body;
+
+        let idProofUrl = id_proof_url || "";
+
+        if (req.file) {
+            idProofUrl = extractUrl(req.file, req);
+        }
+
+        if (!idProofUrl || idProofUrl.trim().length === 0) {
+            return sendResponse(
+                res,
+                BAD_REQUEST,
+                false,
+                "ID proof is required",
+                { error_code: "VALIDATION_ERROR", errors: ["ID proof is required"] }
+            );
+        }
 
         const [day, month, year] = dob.split("-").map(Number);
         const dobDate = new Date(year, month - 1, day);
@@ -329,7 +264,7 @@ const registerProvider = async (req, res) => {
             gender,
             password,
             profilePhoto: "",
-            idProofUrl: id_proof_url || "",
+            idProofUrl,
             serviceType: service_type || [],
             experience: experience || 0,
             acceptedTerms: accepted_terms,

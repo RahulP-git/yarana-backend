@@ -173,10 +173,6 @@ const validateRegisterProvider = (data) => {
         errors.push("Passwords do not match");
     }
 
-    if (!id_proof_url || id_proof_url.trim().length === 0) {
-        errors.push("ID proof is required");
-    }
-
     if (!service_type || !Array.isArray(service_type) || service_type.length === 0) {
         errors.push("At least one service type is required");
     }

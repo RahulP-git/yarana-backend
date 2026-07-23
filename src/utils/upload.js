@@ -52,6 +52,8 @@ const uploadFiles = upload.fields([
     { name: "id_proof", maxCount: 1 }
 ]);
 
+const uploadIdProof = upload.single("id_proof");
+
 const extractUrl = (file, req) => {
     const protocol = req.protocol;
     const host = req.get("host");
@@ -59,4 +61,4 @@ const extractUrl = (file, req) => {
     return `${protocol}://${host}${relativePath}`;
 };
 
-module.exports = { uploadFiles, extractUrl };
+module.exports = { uploadFiles, uploadIdProof, extractUrl };
