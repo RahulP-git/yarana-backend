@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth.routes");
 const uploadRoutes = require("./routes/upload.routes");
 const homeRoutes = require("./routes/home.routes");
 const categoryRoutes = require("./routes/category.routes");
+const serviceRoutes = require("./routes/service.routes");
 const serviceRequestRoutes = require("./routes/serviceRequest.routes");
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/upload", uploadRoutes);
 app.use("/api/v1/home", homeRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/provider/services", serviceRoutes);
 app.use("/api/v1/user/post-service", serviceRequestRoutes);
 
 app.use((err, req, res, next) => {
