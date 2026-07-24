@@ -236,7 +236,7 @@ const registerProvider = async (req, res) => {
         } = req.body;
 
         let profilePhotoUrl = "";
-        let idProofUrl = id_proof_url || "";
+        let idProofUrl = "";
 
         if (req.files) {
             if (req.files.profile_photo && req.files.profile_photo[0]) {
@@ -245,6 +245,14 @@ const registerProvider = async (req, res) => {
             if (req.files.id_proof && req.files.id_proof[0]) {
                 idProofUrl = extractUrl(req.files.id_proof[0], req);
             }
+        }
+
+        if (!profilePhotoUrl && req.body.profile_photo_url) {
+            profilePhotoUrl = req.body.profile_photo_url;
+        }
+
+        if (!idProofUrl && req.body.id_proof_url) {
+            idProofUrl = req.body.id_proof_url;
         }
 
         if (!idProofUrl || idProofUrl.trim().length === 0) {
