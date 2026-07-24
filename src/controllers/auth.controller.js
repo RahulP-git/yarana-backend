@@ -230,7 +230,6 @@ const registerProvider = async (req, res) => {
             password,
             confirm_password,
             business_name,
-            id_proof_url,
             service_type,
             experience,
             accepted_terms
@@ -246,14 +245,6 @@ const registerProvider = async (req, res) => {
             if (req.files.id_proof && req.files.id_proof[0]) {
                 idProofUrl = extractUrl(req.files.id_proof[0], req);
             }
-        }
-
-        if (!profilePhotoUrl && req.body.profile_photo_url) {
-            profilePhotoUrl = req.body.profile_photo_url;
-        }
-
-        if (!idProofUrl && req.body.id_proof_url) {
-            idProofUrl = req.body.id_proof_url;
         }
 
         if (!idProofUrl || idProofUrl.trim().length === 0) {
