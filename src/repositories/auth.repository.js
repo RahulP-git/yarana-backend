@@ -17,6 +17,7 @@ const registerUser = async ({
     acceptedTerms,
     serviceType,
     experience,
+    businessName,
     role = "customer"
 }) => {
     const existingEmail = await User.findOne({ email });
@@ -49,6 +50,7 @@ const registerUser = async ({
         idProofUrl: idProofUrl || "",
         serviceType: serviceType || [],
         experience: experience || 0,
+        businessName: businessName || "",
         role,
         isVerified: false
     });

@@ -229,6 +229,7 @@ const registerProvider = async (req, res) => {
             gender,
             password,
             confirm_password,
+            business_name,
             id_proof_url,
             service_type,
             experience,
@@ -281,6 +282,7 @@ const registerProvider = async (req, res) => {
             idProofUrl,
             serviceType: service_type || [],
             experience: experience || 0,
+            businessName: business_name || "",
             acceptedTerms: accepted_terms,
             role: "provider"
         });

@@ -93,6 +93,10 @@ const userSchema = new mongoose.Schema(
         experience: {
             type: Number,
             default: 0
+        },
+        businessName: {
+            type: String,
+            default: ""
         }
     },
     {
