@@ -235,10 +235,16 @@ const registerProvider = async (req, res) => {
             accepted_terms
         } = req.body;
 
+        let profilePhotoUrl = "";
         let idProofUrl = id_proof_url || "";
 
-        if (req.file) {
-            idProofUrl = extractUrl(req.file, req);
+        if (req.files) {
+            if (req.files.profile_photo && req.files.profile_photo[0]) {
+                profilePhotoUrl = extractUrl(req.files.profile_photo[0], req);
+            }
+            if (req.files.id_proof && req.files.id_proof[0]) {
+                idProofUrl = extractUrl(req.files.id_proof[0], req);
+            }
         }
 
         if (!idProofUrl || idProofUrl.trim().length === 0) {
@@ -263,7 +269,7 @@ const registerProvider = async (req, res) => {
             dob: dobDate,
             gender,
             password,
-            profilePhoto: "",
+            profilePhoto: profilePhotoUrl,
             idProofUrl,
             serviceType: service_type || [],
             experience: experience || 0,
